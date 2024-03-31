@@ -2,3 +2,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+:root{
+    background-color: #F6F5F5;
+}
