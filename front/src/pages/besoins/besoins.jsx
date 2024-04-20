@@ -1,11 +1,10 @@
-
-import Header from "./../../componant/navbar/Header"
+import Header from '../../componant/Header';
 function Besoins() {
   return (
     <>
-    <Header/>
+      <Header />
     </>
-  )
+  );
 }
 
-export default Besoins
+export default Besoins;

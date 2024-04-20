@@ -1,11 +1,12 @@
-import Navbar from "../../componant/navbar/Header"
-
+import Navbar from '../../componant/Header';
+import SideBar from '../../componant/Sidebar';
 function Admin() {
   return (
-<section >
-<Navbar/>
-</section>
-  )
+    <section>
+      <Navbar />
+      <SideBar/>
+    </section>
+  );
 }
 
-export default Admin
+export default Admin;
