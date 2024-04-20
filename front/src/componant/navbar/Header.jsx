@@ -1,113 +1,106 @@
+import { Fragment } from 'react';
+import { Disclosure, Menu, Transition } from '@headlessui/react';
+import {BellIcon} from '@heroicons/react/24/outline';
+import BRALOGO from './../../assets/RAB.svg'
+const navigation = [
+  { name: 'Dashboard', href: '#', current: true },
+  { name: 'Team', href: '#', current: false },
+  { name: 'Projects', href: '#', current: false },
+  { name: 'Calendar', href: '#', current: false },
+];
 
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ');
+}
 
+export default function Example() {
+  return (
+    <Disclosure as="nav" className="bg-white">
+      <>
+        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+          <div className="relative flex h-16 items-center justify-between">
+            <div className="flex ">
+              <div className="flex flex-shrink-0 items-center">
+                <img className="h-8 w-auto" src={BRALOGO} alt="Your Company" />
+              </div>
+              <div className="hidden sm:ml-6 sm:block">
+                <div className="flex space-x-4">
+                  {navigation.map((item) => (
+                    <a
+                      key={item.name}
+                      href={item.href}
+                      className={classNames(
+                        item.current
+                          ? 'bg-gray-900 text-white'
+                          : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        'rounded-md px-3 py-2 text-sm font-medium',
+                      )}
+                      aria-current={item.current ? 'page' : undefined}
+                    >
+                      {item.name}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              <button
+                type="button"
+                className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-orange-600 focus:outline-none  "
+              >
+                <span className="absolute -inset-1.5" />
+                <span className="sr-only">View notifications</span>
+                <BellIcon className="h-6 w-6" aria-hidden="true" />
+              </button>
 
-
-
-<header className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
-  <div className="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
-    <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
-      {/* <!-- Hamburger Toggle BTN --> */}
-      <button
-        aria-controls="sidebar"
-        onClick={(e) => {
-          e.stopPropagation();
-          props.setSidebarOpen(!props.sidebarOpen);
-        }}
-        className="z-99999 block rounded-sm border border-stroke bg-white p-1.5 shadow-sm dark:border-strokedark dark:bg-boxdark lg:hidden"
-      >
-        <span className="relative block h-5.5 w-5.5 cursor-pointer">
-          <span className="du-block absolute right-0 h-full w-full">
-            <span
-              className={`relative left-0 top-0 my-1 block h-0.5 w-0 rounded-sm bg-black delay-[0] duration-200 ease-in-out dark:bg-white ${
-                !props.sidebarOpen && '!w-full delay-300'
-              }`}
-            ></span>
-            <span
-              className={`relative left-0 top-0 my-1 block h-0.5 w-0 rounded-sm bg-black delay-150 duration-200 ease-in-out dark:bg-white ${
-                !props.sidebarOpen && 'delay-400 !w-full'
-              }`}
-            ></span>
-            <span
-              className={`relative left-0 top-0 my-1 block h-0.5 w-0 rounded-sm bg-black delay-200 duration-200 ease-in-out dark:bg-white ${
-                !props.sidebarOpen && '!w-full delay-500'
-              }`}
-            ></span>
-          </span>
-          <span className="absolute right-0 h-full w-full rotate-45">
-            <span
-              className={`absolute left-2.5 top-0 block h-full w-0.5 rounded-sm bg-black delay-300 duration-200 ease-in-out dark:bg-white ${
-                !props.sidebarOpen && '!h-0 !delay-[0]'
-              }`}
-            ></span>
-            <span
-              className={`delay-400 absolute left-0 top-2.5 block h-0.5 w-full rounded-sm bg-black duration-200 ease-in-out dark:bg-white ${
-                !props.sidebarOpen && '!h-0 !delay-200'
-              }`}
-            ></span>
-          </span>
-        </span>
-      </button>
-      {/* <!-- Hamburger Toggle BTN --> */}
-
-      <Link className="block flex-shrink-0 lg:hidden" to="/">
-        <img src={LogoIcon} alt="Logo" />
-      </Link>
-    </div>
-
-    <div className="hidden sm:block">
-      <form action="https://formbold.com/s/unique_form_id" method="POST">
-        <div className="relative">
-          <button className="absolute left-0 top-1/2 -translate-y-1/2">
-            <svg
-              className="fill-body hover:fill-primary dark:fill-bodydark dark:hover:fill-primary"
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M9.16666 3.33332C5.945 3.33332 3.33332 5.945 3.33332 9.16666C3.33332 12.3883 5.945 15 9.16666 15C12.3883 15 15 12.3883 15 9.16666C15 5.945 12.3883 3.33332 9.16666 3.33332ZM1.66666 9.16666C1.66666 5.02452 5.02452 1.66666 9.16666 1.66666C13.3088 1.66666 16.6667 5.02452 16.6667 9.16666C16.6667 13.3088 13.3088 16.6667 9.16666 16.6667C5.02452 16.6667 1.66666 13.3088 1.66666 9.16666Z"
-                fill=""
-              />
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M13.2857 13.2857C13.6112 12.9603 14.1388 12.9603 14.4642 13.2857L18.0892 16.9107C18.4147 17.2362 18.4147 17.7638 18.0892 18.0892C17.7638 18.4147 17.2362 18.4147 16.9107 18.0892L13.2857 14.4642C12.9603 14.1388 12.9603 13.6112 13.2857 13.2857Z"
-                fill=""
-              />
-            </svg>
-          </button>
-
-          <input
-            type="text"
-            placeholder="Type to search..."
-            className="w-full bg-transparent pl-9 pr-4 text-black focus:outline-none dark:text-white xl:w-125"
-          />
+              {/* Profile dropdown */}
+              <Menu as="div" className="relative ml-3">
+                <div>
+                  <div className="flex flex-wrap items-center">
+                    <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-600 ">
+                      <img
+                        className="h-8 w-8 rounded-full"
+                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        alt=""
+                      />
+                    </Menu.Button>
+                    <p className="px-5 items-center">Nom et prenom</p>
+                  </div>
+                </div>
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                   
+                 
+                    <Menu.Item>
+                      {({ active }) => (
+                        <a
+                          href="#"
+                          className={classNames(
+                            active ? 'bg-gray-100' : '',
+                            'block px-4 py-2 text-sm text-gray-700',
+                          )}
+                        >
+                          Sign out
+                        </a>
+                      )}
+                    </Menu.Item>
+                  </Menu.Items>
+                </Transition>
+              </Menu>
+            </div>
+          </div>
         </div>
-      </form>
-    </div>
 
-    <div className="flex items-center gap-3 2xsm:gap-7">
-      <ul className="flex items-center gap-2 2xsm:gap-4">
-        {/* <!-- Dark Mode Toggler --> */}
-        <DarkModeSwitcher />
-        {/* <!-- Dark Mode Toggler --> */}
-
-        {/* <!-- Notification Menu Area --> */}
-        <DropdownNotification />
-        {/* <!-- Notification Menu Area --> */}
-
-        {/* <!-- Chat Notification Area --> */}
-        <DropdownMessage />
-        {/* <!-- Chat Notification Area --> */}
-      </ul>
-
-      {/* <!-- User Area --> */}
-      <DropdownUser />
-      {/* <!-- User Area --> */}
-    </div>
-  </div>
-</header>;
+        
+      </>
+    </Disclosure>
+  );
+}
