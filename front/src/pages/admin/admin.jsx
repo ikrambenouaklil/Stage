@@ -1,4 +1,4 @@
-import Navbar from "../../componant/navbar/navbar"
+import Navbar from "../../componant/navbar/Header"
 
 function Admin() {
   return (
