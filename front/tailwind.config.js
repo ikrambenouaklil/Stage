@@ -8,9 +8,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        'orange-brand': '#fbbb76',
+        'orange-brand': '#FF9500',
+        'gray-brand': '#202224',
         'blue-brand': '#0095F6',
         'blue-sec-brand': '#1877F2',
+        'gray-brand-background': '#EAECF0',
+        
       },
     },
   },

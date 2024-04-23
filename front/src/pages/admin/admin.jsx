@@ -3,9 +3,9 @@ import Sidebar from '../../componant/Sidebar';
 import HeroSection from "../../componant/hero"
 function Admin() {
   return (
-    <section className='flex-col'>
+    <section className="flex-col w-full">
       <Header />
-      <div className="flex justify-evenly my-1">
+      <div className="flex gap-1 my-1 w-full">
         <Sidebar />
         <HeroSection />
       </div>
