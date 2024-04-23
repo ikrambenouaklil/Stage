@@ -1,10 +1,10 @@
-import Navbar from '../../componant/Header';
-import SideBar from '../../componant/Sidebar';
+import Header from '../../componant/Header';
+// import Sidebar from '../../componant/Sidebar';
 function Admin() {
   return (
     <section>
-      <Navbar />
-      <SideBar/>
+      <Header />
+      {/* <Sidebar>hello world</Sidebar> */}
     </section>
   );
 }

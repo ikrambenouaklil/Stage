@@ -1,0 +1,51 @@
+const express = require("express")
+
+const app = express()
+const port = 3008;
+
+const users = []
+//midlleware 
+// data = format json 
+app.use(express.json())
+// from database to front 
+app.get('/', (req, res) => {
+  res.send("hello wolrd")
+});
+app.get('/users', (req, res) => {
+    if (users.length==0){
+        res.status(404).send("no users")
+        return 
+    } 
+     res.status(201).send(users)
+  
+});
+// create user
+app.post('/users', (req, res) => {
+ const User = req.body
+ // find == bool findIndex ={number if find -1 if not found }
+ //
+ const finduser = users.find((x) => x.id === User.id);
+ if (finduser) {
+   res.status(400).send('User already exists');
+   // i should do the return
+   return;
+ }
+ users.push(User);
+  res.status(201).send('created');
+});
+//ymdli l id tha i want to delete 
+app.delete("/users/:id",(req,res)=>{
+
+const {id}= req.params
+const findUserID = users.findIndex((x)=> x.id ===id)
+       if (findUserID == -1){
+        res.status(400).send('user not found');
+        return
+        }
+   users.splice(findUserID , 1)
+   res.send("deleted")
+})
+
+app.listen(port, (req, res) => {
+  console.log('this port :'+port+' is open');
+});

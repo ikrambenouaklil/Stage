@@ -5,7 +5,7 @@ import "./login.css";
 function Login() {
   return (
     <>
-      <section className="bg-gray-900">
+      <section className="">
         <div className="flex flex-col items-center justify-center  py-8 mx-auto md:h-screen lg:py-0 round">
           <div className="w-full  shadow dark:border md:mt-0  xl:p-0 round ">
             <div className="    bg-white  space-y-4 md:space-y-4 containerwithBolder ">

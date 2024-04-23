@@ -6,7 +6,7 @@
 .containerwithBolder {
   
   border-radius: 14px;
-  padding: 41px 48px;
+  padding: 40px 48px;
   justify-content: space-between;
 }
 input:focus::placeholder {
