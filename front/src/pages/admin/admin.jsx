@@ -1,10 +1,14 @@
 import Header from '../../componant/Header';
-// import Sidebar from '../../componant/Sidebar';
+import Sidebar from '../../componant/Sidebar';
+import HeroSection from "../../componant/hero"
 function Admin() {
   return (
-    <section>
+    <section className='flex-col'>
       <Header />
-      {/* <Sidebar>hello world</Sidebar> */}
+      <div className="flex justify-evenly my-1">
+        <Sidebar />
+        <HeroSection />
+      </div>
     </section>
   );
 }
