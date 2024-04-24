@@ -8,27 +8,68 @@ import {
   RiArrowRightSLine,
 } from 'react-icons/ri';
 import { FaBox } from 'react-icons/fa';
-
+import { Navigate } from 'react-router-dom';
+ 
+const array = [
+  {
+    text: 'Admin',
+    icon: <RiUserLine />,
+  },
+  {
+    text: 'Besoins',
+    icon: <RiUserLine />,
+  },
+  {
+    text: 'Besoins',
+    icon: <RiUserLine />,
+  },
+];
 const Sidebar = () => {
   const [showProducts, setShowProducts] = useState(false);
 
   const toggleProducts = () => {
     setShowProducts(!showProducts);
   };
-  
+
 
   return (
    
     <div className="bg-white h-screen w-64 text-gray-800">
       <div className="p-4 my-1">
         <ul className="mt-4">
+
+
+{array.map((item)=>{
+const icText = text.toLowerCase(); 
           <li className="mb-2 ">
-            <a href="#" className="flex items-center p-2   focus:bg-orange-brand  hover:bg-orange-brand  focus:text-white hover:text-white"  >
-              <RiUserLine className="mr-2" />
-              Users
+            <a
+              href="#"
+              className="flex items-center p-2   focus:bg-orange-brand  hover:bg-orange-brand  focus:text-white hover:text-white"
+          
+          onClick={()=>{
+            Navigate(`/${icText}`)
+            setActive(icText)
+          }
+  }>
+              {item.icon}
+             {item.text}
             </a>
-          </li>
-          <li className="mb-2">
+          </li>;
+
+
+})}
+
+
+
+
+
+
+
+
+
+
+
+          {/* <li className="mb-2">
             <button className="flex items-center justify-between w-full p-2  focus:text-white focus:bg-orange-brand  hover:bg-orange-brand hover:text-white "
               onClick={toggleProducts} >
               <div className="flex items-center">
@@ -70,8 +111,8 @@ const Sidebar = () => {
             >
               <RiSettingsLine className="mr-2" />
               Settings
-            </a>
-          </li>
+            </a> 
+          </li>*/}
         </ul>
       </div>
     </div>
