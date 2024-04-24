@@ -15,34 +15,22 @@ const Sidebar = () => {
   const toggleProducts = () => {
     setShowProducts(!showProducts);
   };
+  
 
   return (
+   
     <div className="bg-white h-screen w-64 text-gray-800">
       <div className="p-4 my-1">
         <ul className="mt-4">
-          <li className="mb-2">
-            <a
-              href="#"
-              className="flex items-center p-2 hover:bg-orange-brand hover:text-white"
-            >
-              <RiDashboardLine className="mr-2" />
-              Dashboard
-            </a>
-          </li>
-          <li className="mb-2">
-            <a
-              href="#"
-              className="flex items-center p-2 hover:bg-orange-brand hover:text-white"
-            >
+          <li className="mb-2 ">
+            <a href="#" className="flex items-center p-2   focus:bg-orange-brand  hover:bg-orange-brand  focus:text-white hover:text-white"  >
               <RiUserLine className="mr-2" />
               Users
             </a>
           </li>
           <li className="mb-2">
-            <button
-              className="flex items-center justify-between w-full p-2 hover:bg-orange-brand hover:text-white"
-              onClick={toggleProducts}
-            >
+            <button className="flex items-center justify-between w-full p-2  focus:text-white focus:bg-orange-brand  hover:bg-orange-brand hover:text-white "
+              onClick={toggleProducts} >
               <div className="flex items-center">
                 <FaBox className="mr-2" />
                 Products
@@ -52,17 +40,14 @@ const Sidebar = () => {
             {showProducts && (
               <ul className="ml-4">
                 <li>
-                  <a
-                    href="#"
-                    className="block p-2 hover:bg-orange-brand hover:text-white"
-                  >
+                  <a href="#"  className="block p-2  focus:bg-orange-brand  hover:bg-orange-brand  focus:text-white hover:text-white" >
                     All Products
                   </a>
                 </li>
                 <li>
                   <a
                     href="#"
-                    className="block p-2 hover:bg-orange-brand hover:text-white"
+                    className="block p-2  focus:bg-orange-brand  hover:bg-orange-brand  focus:text-white hover:text-white"
                   >
                     Add Product
                   </a>
@@ -70,7 +55,7 @@ const Sidebar = () => {
                 <li>
                   <a
                     href="#"
-                    className="block p-2 hover:bg-orange-brand hover:text-white"
+                    className="block p-2  focus:bg-orange-brand  hover:bg-orange-brand  focus:text-white hover:text-white"
                   >
                     Add Product
                   </a>
@@ -81,7 +66,7 @@ const Sidebar = () => {
           <li className="mb-2">
             <a
               href="#"
-              className="flex items-center p-2 hover:bg-orange-brand hover:text-white"
+              className="flex items-center p-2  focus:bg-orange-brand  hover:bg-orange-brand  focus:text-white hover:text-white"
             >
               <RiSettingsLine className="mr-2" />
               Settings

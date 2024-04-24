@@ -7,10 +7,10 @@ const AdminUsersTable = ({ users, deleteUser }) => {
   const [editedEmail, setEditedEmail] = useState('');
   const [selectedUsers, setSelectedUsers] = useState([]);
 
-  const handleEdit = (user) => {
-    setEditingUser(user);
-    setEditedName(user.name);
-    setEditedEmail(user.email);
+  const handleEdit = (Users) => {
+    setEditingUser(users);
+    setEditedName(users.name);
+    setEditedEmail(users.email);
   };
 
   const handleSaveEdit = () => {
@@ -35,36 +35,37 @@ const AdminUsersTable = ({ users, deleteUser }) => {
   const isSelected = (userId) => selectedUsers.includes(userId);
 
   return (
-    <div className="mt-8 text-gray-800 w-full ">
+    <div className="mt-8 text-gray-800 w-full whitespace-nowrap text-sm ">
       <h2 className="text-2xl font-bold mb-4 text-orange-brand">
         Les utilisateurs
       </h2>
+
       <table className="w-full border-collapse border border-gray-100">
         <thead className="text-capitalize">
           <tr className="bg-gray-50">
-            <th className="border whitespace-nowrap  border-gray-100 px-5 min-w-5 text-sm py-2"></th>
-            <th className="border whitespace-nowrap border-gray-100 px-5 min-w-5 text-sm py-2">
+            <th className="border  border-gray-100 px-5 min-w-5  py-2"></th>
+            <th className="border border-gray-100 px-5 min-w-5  py-2">
               Nom
             </th>
-            <th className="border whitespace-nowrap border-gray-100 px-5 min-w-5 text-sm py-2">
+            <th className="border border-gray-100 px-5 min-w-5  py-2">
               Prénom
             </th>
-            <th className="border whitespace-nowrap border-gray-100 px-5 min-w-5 text-sm py-2">
+            <th className="border border-gray-100 px-5 min-w-5  py-2">
               Nom d'Utlisateur
             </th>
-            <th className="border  text-capitalize whitespace-nowrap w-max-content border-gray-100 px-8 text-sm">
-             mot de passe
+            <th className="border  text-capitalize w-max-content border-gray-100 px-8 ">
+              mot de passe
             </th>
-            <th className="border whitespace-nowrap border-gray-100 px-5 min-w-5 text-sm py-2">
+            <th className="border border-gray-100 px-5 min-w-5  py-2">
               Email
             </th>
-            <th className="border whitespace-nowrap border-gray-100 px-5 min-w-5 text-sm py-2">
+            <th className="border border-gray-100 px-5 min-w-5  py-2">
               Departement
             </th>
-            <th className="border whitespace-nowrap border-gray-100 px-5 min-w-5 text-sm py-2">
+            <th className="border border-gray-100 px-5 min-w-5  py-2">
               Accée
             </th>
-            <th className="border whitespace-nowrap border-gray-100 px-5 min-w-5 text-sm py-2">
+            <th className="border border-gray-100 px-5 min-w-5  py-2">
               Action
             </th>
           </tr>
@@ -72,7 +73,7 @@ const AdminUsersTable = ({ users, deleteUser }) => {
         <tbody>
           {users.map((user) => (
             <tr key={user.id}>
-              <td className="border border-gray-100 px-4 py-2">
+              <td className="border border-gray-100 px-2 py-2">
                 <input
                   type="checkbox"
                   checked={isSelected(user.id)}

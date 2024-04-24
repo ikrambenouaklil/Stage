@@ -15,8 +15,8 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="bg-white py-12 w-full">
-      <div className=" w-full  px-4 ">
+    <div className="bg-white py-8 w-full">
+      <div className=" w-full  px-6 ">
         <AdminUsersTable users={usersData} deleteUser={deleteUser} />
       </div>
     </div>
