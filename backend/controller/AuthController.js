@@ -144,8 +144,7 @@ const login = async (req, res) => {
       })
       .json({
         success: true,
-        token,
-        user,
+        token
       });
   } catch (err) {
     console.error(err);
