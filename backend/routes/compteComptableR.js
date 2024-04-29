@@ -23,7 +23,7 @@ router.get('/compteCmpt', async (req, res) => {
     res.status(200).send(compte_comptable);
    
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).send({ error: err.message });
   }
 });
 router.post('/compteCmpt', async (req, res) => {

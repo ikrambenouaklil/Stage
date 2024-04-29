@@ -1,15 +1,20 @@
 const express = require('express');
+require('dotenv').config()
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-dotenv.config({ path: 'config.env' });
 const app = express();
-const cors = require('cors');
+const cors = require('cors')
 const besoinR = require('./routes/besoinR');
 const compteComp = require('./routes/compteComptableR');
-const PORT = process.env.PORT;
-//midlleware  data = format json
-app.use(express.json());
-app.use(cors)
+const compagneBudg = require('./routes/compagneBudg');
+const elaboration = require('./routes/elaboration');
+const Authuser = require('./routes/Authuser')
+
+const user = require('./routes/userRoutes');
+const port = process.env.PORT || 3010;
+const cookieParser = require('cookie-parser')
+
+
+
 // db connection
 
 mongoose.connect('mongodb://admin:admin@localhost:27017/BRA?authSource=admin');
@@ -21,12 +26,22 @@ db.on('error', () => {
 db.once('open', () => {
   console.log('connected to db !');
 });
+//midlleware
+app.use(cors());
+app.use(cookieParser())
 //routes
+//midlleware  data = format json
+app.use(express.json());
+
 app.use(besoinR);
 app.use(compteComp);
+app.use(compagneBudg);
+app.use(elaboration);
+app.use('/auth',Authuser);
+app.use('/users', user);
 
 //listen
 
-app.listen(PORT, (req, res) => {
-  console.log('this port :' + PORT + ' is open');
+app.listen(port, () => {
+  console.log('this port :' + port + ' is open');
 });

@@ -1,5 +1,5 @@
 const mongoose= require("mongoose");
-const CompteComptables = require('../model/compteComtable');
+const CompteComptables = require('./compteComtable');
 const besoinSchema = new mongoose.Schema({
   item: {
     type: String,
@@ -32,9 +32,13 @@ const besoinSchema = new mongoose.Schema({
     required: false,
     validate: {
       validator: Number.isInteger, // Validates that the number is an integer
-      message: '{VALUE} doit etre un entier ',
+      message: `{VALUE} doit etre un entier `,
     },
   },
+  departement:{
+//to edit 
+
+  }, 
   compteComptable: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'compteComptables', // Référence au modèle CompteComptable

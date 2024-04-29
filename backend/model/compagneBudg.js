@@ -1,13 +1,37 @@
-// const mongoose = require('mongoose');
-// const CompteComptable = require('../model/compteComtable');
-// const compagneSchema = new mongoose.Schema({
- 
-//   : {
-//     type: mongoose.Schema.Types.ObjectId,
-//     ref: 'CompteComptable', // Référence au modèle CompteComptable
-//     required: true,
-//   },
-// });
+const mongoose = require('mongoose');
+const lesbesoins = require('./besoin');
+const elaborations = require('./elaboration');
 
-// const besoinModel = mongoose.model('lesbesoins', besoinSchema);
-// module.exports = besoinModel;
+const compagneBudgSchema = new mongoose.Schema({
+  Année: {
+    type: Number,
+    required: true,
+    min: 2024,
+    max: 9999,
+    unique: true,
+  },
+  NoteOrientation: {
+    type: String, // to be edit it after
+  },
+  besoins: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'lesbesoins',
+    required: true,
+  },
+  elaboration: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'elaborations',
+    required: true,
+  },
+  cloturer: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+});
+
+const compagneBudg = mongoose.model(
+  'lescompagnes',
+  compagneBudgSchema,
+);
+module.exports = compagneBudg;
