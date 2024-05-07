@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Elaboration = require('../model/elaboration');
 
+const verifyJWT = require('../middleware/verifyJWT');
+
+router.use(verifyJWT);
 router.get('/elaborations', async (req, res) => {
   try {
     // get toutes les elabo

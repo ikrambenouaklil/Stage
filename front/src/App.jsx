@@ -1,27 +1,17 @@
-import Login from "./pages/Log/Login"
-import "./index.css"
-import 'tw-elements-react/dist/css/tw-elements-react.min.css';
-// import ReactDOM from "react-dom/client";
-import Testbesoin from "./pages/testbesoin";
-import {   BrowserRouter, Routes, Route } from "react-router-dom";
-
+import { Outlet } from "react-router-dom";
+import Sidebar from "./componant/Sidebar";
+import Header from "./componant/Header";
 
 export default function App() {
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route>
-             <Route  />
-            <Route path="/" element={<Login/>} />
-            <Route path="/admin" element={<Testbesoin/>} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-   
-
-
+      <section className="flex-col w-full font">
+        <Header />
+        <div style={{ display: "flex", marginTop: 3, gap: 3 }}>
+          <Sidebar />
+          <Outlet />
+        </div>
+      </section>
     </>
   );
 }
-

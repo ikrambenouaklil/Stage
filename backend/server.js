@@ -2,7 +2,8 @@ const express = require('express');
 require('dotenv').config()
 const mongoose = require('mongoose');
 const app = express();
-const cors = require('cors')
+const cors = require('cors');
+app.use( cors());
 const besoinR = require('./routes/besoinR');
 const compteComp = require('./routes/compteComptableR');
 const compagneBudg = require('./routes/compagneBudg');
@@ -30,15 +31,16 @@ db.once('open', () => {
 app.use(cors());
 app.use(cookieParser())
 //routes
-//midlleware  data = format json
+
 app.use(express.json());
 
+
+app.use('/auth',Authuser);
+app.use('/users', user);
 app.use(besoinR);
 app.use(compteComp);
 app.use(compagneBudg);
 app.use(elaboration);
-app.use('/auth',Authuser);
-app.use('/users', user);
 
 //listen
 

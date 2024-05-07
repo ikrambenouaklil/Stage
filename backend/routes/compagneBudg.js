@@ -1,20 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const compagneBudg = require('../model/compagneBudg');
-
-router.get('/compagnes', async (req, res) => {
+const verifyJWT = require('../middleware/verifyJWT');
+// router.use(verifyJWT);
+router.get('/compagnes',  async (req, res) => {
   try {
     // get toutes les besoins
-    const besoins = await Besoin.find().populate('besoins', 'elaboration');
+    const besoins = await compagneBudg
+      .find()
+      .populate('besoins', 'elaboration');
     res.status(200).send(besoins);
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
 });
 
-router.post('/compagnes', async (req, res) => {
+router.post('/compagnes',  async (req, res) => {
   try {
-    const besoin = new Besoin(req.body);
+    const besoin = new compagneBudg(req.body);
     // save in the db
     await besoin.save();
     res
@@ -25,7 +28,7 @@ router.post('/compagnes', async (req, res) => {
   }
 });
 
-router.put('/compagnes/:id', async (req, res) => {
+router.put('/compagnes/:id',  async (req, res) => {
   try {
     const { id } = req.params;
     const dataToUpdate = req.body;
@@ -42,7 +45,7 @@ router.put('/compagnes/:id', async (req, res) => {
   }
 });
 
-router.delete('/compagnes/:id', async (req, res) => {
+router.delete('/compagnes/:id',  async (req, res) => {
   try {
     const { id } = req.params;
     await Besoin.findByIdAndDelete(id);

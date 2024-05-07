@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const CompteComptable = require('../model/compteComtable');
+const verifyJWT = require('../middleware/verifyJWT');
 
 const comptesDefaults = [
   { numeroCompte: 61, designation: 'Achats consommés' },
@@ -16,16 +17,6 @@ const comptesDefaults = [
   },
 ];
 
-
-router.get('/compteCmpt', async (req, res) => {
-  try {
-    const compte_comptable = await CompteComptable.find();
-    res.status(200).send(compte_comptable);
-   
-  } catch (err) {
-    res.status(500).send({ error: err.message });
-  }
-});
 router.post('/compteCmpt', async (req, res) => {
   try {
     await CompteComptable.insertMany(comptesDefaults);
@@ -35,6 +26,15 @@ router.post('/compteCmpt', async (req, res) => {
       "Une erreur s'est produite lors de l'initialisation des comptes comptables :",
       error,
     );
+  }
+});
+router.use(verifyJWT);
+router.get('/compteCmpt', async (req, res) => {
+  try {
+    const compte_comptable = await CompteComptable.find();
+    res.status(200).send(compte_comptable);
+  } catch (err) {
+    res.status(500).send({ error: err.message });
   }
 });
 

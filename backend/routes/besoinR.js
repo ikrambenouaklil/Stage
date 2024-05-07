@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router()
 const Besoin = require( "../model/besoin")
+const verifyJWT = require('../middleware/verifyJWT');
+
+
+
+router.use(verifyJWT);
 
 router.get("/besoin",async (req, res)=>{
 try{
