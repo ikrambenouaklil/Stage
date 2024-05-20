@@ -9,7 +9,7 @@ export default function App() {
         <Header />
         <div style={{ display: "flex", marginTop: 3, gap: 3 }}>
           <Sidebar />
-          <Outlet />
+          <Outlet  />
         </div>
       </section>
     </>

@@ -1,5 +1,5 @@
-const mongoose= require("mongoose");
-const CompteComptables = require('./compteComtable');
+const mongoose = require("mongoose");
+
 const besoinSchema = new mongoose.Schema({
   item: {
     type: String,
@@ -9,45 +9,28 @@ const besoinSchema = new mongoose.Schema({
     type: Number,
     minimum: 0,
     required: true,
-    integer: true,
-    validate: {
-      validator: Number.isInteger, // Validates that the number is an integer
-      message: '{VALUE} doit etre un entier ',
-    },
-    
   },
   quantité: {
     type: Number,
     minimum: 0,
     default: 1,
-    required: false,
-    validate: {
-      validator: Number.isInteger, // Validates that the number is an integer
-      message: '{VALUE} doit etre un entier ',
-    },
   },
   duréeContrat: {
     type: Number,
     minimum: 0,
     default: 1,
-    required: false,
-    validate: {
-      validator: Number.isInteger, // Validates that the number is an integer
-      message: `{VALUE} doit etre un entier `,
-    },
   },
-  departement:{
-//to edit 
-
-  }, 
   compteComptable: {
+    type: Number,
+    min: 61,
+    max: 68,
+  },
+  compagne: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'compteComptables', // Référence au modèle CompteComptable
-    required: true,
+    ref: "lescompagnes",
+    required: true, // Make compagne ID mandatory
   },
 });
 
-
-const besoinModel  =   mongoose.model("lesbesoins",besoinSchema )
+const besoinModel = mongoose.model("lesbesoins", besoinSchema);
 module.exports = besoinModel;
-

@@ -1,0 +1,307 @@
+import React, { useState, useEffect } from "react";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import EditIcon from "@mui/icons-material/Edit";
+import { GridToolbarExport } from "@mui/x-data-grid";
+import { exportToExcel } from "./utils";
+import DeleteIcon from "@mui/icons-material/Delete";
+
+import {
+  Box,
+  MenuItem,
+  CircularProgress,
+  Alert,
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+} from "@mui/material";
+import { useParams } from "react-router-dom";
+
+const Elaboration = () => {
+  const { compagneId } = useParams();
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [rows, setRows] = useState([]);
+
+  useEffect(() => {
+    const fetchElaborations = async () => {
+      try {
+        const response = await fetch(`/api/elaborations/${compagneId}`);
+        const data = await response.json();
+        setRows(data);
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération des élaborations :",
+          error
+        );
+      }
+    };
+
+    fetchElaborations();
+  }, [compagneId]);
+
+  const handleEditDialog = (row) => {
+    setSelectedRow(row);
+    setEditDialogOpen(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setEditDialogOpen(false);
+  };
+
+  const handleSaveEdit = async (updatedRow) => {
+    try {
+      const response = await fetch(`/api/elaborations/${updatedRow.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedRow),
+      });
+
+      if (response.ok) {
+        const updatedData = await response.json();
+        setRows((prevRows) =>
+          prevRows.map((row) => (row.id === updatedData.id ? updatedData : row))
+        );
+      } else {
+        console.error(
+          "Erreur lors de la mise à jour de l'élaboration :",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de l'élaboration :", error);
+    }
+  };
+
+  const columns = [
+    {
+      field: "compteComptable",
+      headerName: "Compte Comptable",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+      renderCell: (params) => (
+        <TextField
+          value={params.value.numeroCompte}
+          InputProps={{
+            readOnly: true,
+          }}
+        />
+      ),
+    },
+    {
+      field: "designation",
+      headerName: "Désignation",
+      align: "center",
+      headerAlign: "center",
+      width: 500,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: "wrap" }}>{params.value}</div>
+      ),
+    },
+    {
+      field: "realisationAnnéePre",
+      headerName: "Réalisation N-1",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
+    {
+      field: "prévisionAnnéeActuel",
+      headerName: "Prévision N",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
+    {
+      field: "RealisationS1",
+      headerName: "Réalisation du S1",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
+    {
+      field: "PrévisionS2",
+      headerName: "Prévision du S2",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+      renderCell: (params) => (
+        <div>
+          <IconButton
+            color="primary"
+            onClick={() => handleEditDialog(params.row)}
+          >
+            <EditIcon />
+          </IconButton>
+        </div>
+      ),
+    },
+  ];
+
+  const handleExportToExcel = () => {
+    exportToExcel(rows, "BRA");
+  };
+
+  return (
+    <section
+      style={{
+        backgroundColor: "white",
+        width: "100%",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
+        padding: "30px 20px 0px 20px",
+        fontSize: 10,
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <p style={{ color: "orange", fontWeight: "500", fontSize: 20 }}>
+          Elaboration
+        </p>
+        <div></div>
+      </div>
+      <Box
+        sx={{
+          height: 500,
+          width: "100%",
+          fontSize: 10,
+          whiteSpace: "pre-wrap",
+        }}
+      >
+        <DataGrid
+          slots={{ toolbar: GridToolbar }}
+          rows={rows}
+          getRowId={(row) => row.id}
+          columns={columns}
+          rowHeight={40}
+        />
+        <Button
+          sx={{ width: "100%", marginTop: "10px" }}
+          variant="contained"
+          color="primary"
+          onClick={handleExportToExcel}
+        >
+          Exporter Format Excel
+        </Button>
+      </Box>
+      <Dialog open={editDialogOpen} onClose={handleCloseEditDialog}>
+        <DialogTitle>Modifier l'élaboration</DialogTitle>
+        <DialogContent
+          sx={{
+            paddingTop: 10,
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          <TextField
+            label="Compte Comptable"
+            value={selectedRow?.compteComptable?.numeroCompte}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+
+          <TextField
+            label="Désignation"
+            value={selectedRow?.compteComptable?.designation}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+
+          <TextField
+            label="Réalisation N-1"
+            type="number"
+            value={selectedRow?.realisationAnnéePre}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (/^\d*\.?\d*$/.test(value)) {
+                setSelectedRow((prevRow) => ({
+                  ...prevRow,
+                  realisationAnnéePre: parseFloat(value),
+                }));
+              }
+            }}
+            required
+          />
+
+          <TextField
+            label="Prévision N"
+            type="number"
+            value={selectedRow?.prévisionAnnéeActuel}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (/^\d*\.?\d*$/.test(value)) {
+                setSelectedRow((prevRow) => ({
+                  ...prevRow,
+                  prévisionAnnéeActuel: parseFloat(value),
+                }));
+              }
+            }}
+            required
+          />
+
+          <TextField
+            label="Réalisation du S1"
+            type="number"
+            value={selectedRow?.RealisationS1}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (/^\d*\.?\d*$/.test(value)) {
+                setSelectedRow((prevRow) => ({
+                  ...prevRow,
+                  RealisationS1: parseFloat(value),
+                }));
+              }
+            }}
+            required
+          />
+
+          <TextField
+            label="Prévision du S2"
+            type="number"
+            value={selectedRow?.PrévisionS2}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (/^\d*\.?\d*$/.test(value)) {
+                setSelectedRow((prevRow) => ({
+                  ...prevRow,
+                  PrévisionS2: parseFloat(value),
+                }));
+              }
+            }}
+            required
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEditDialog}>Annuler</Button>
+          <Button
+            onClick={() => {
+              handleSaveEdit(selectedRow);
+              handleCloseEditDialog();
+            }}
+          >
+            Enregistrer
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </section>
+  );
+};
+
+export default Elaboration;

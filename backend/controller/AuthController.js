@@ -3,13 +3,16 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+
 // login
 const login = async (req, res) => {
   try {
     const { NomUtilisateur, MotDePasse } = req.body;
 
     if (!NomUtilisateur || !MotDePasse) {
-      return res.status(400).json('Remplir les champs vides');
+      return res
+        .status(400)
+        .json({ message: "remplir les champs vides " });
     }
 
     const user = await User.findOne({ NomUtilisateur });
@@ -17,7 +20,7 @@ const login = async (req, res) => {
     if (!user) {
       return res
         .status(400)
-        .json("Nom d'utilisateur ou mot de passe incorrect");
+        .json({ message: "Nom d'utilisateur ou mot de passe incorrect" });
     }
 
     const comparePassword = await bcrypt.compare(MotDePasse, user.MotDePasse);
@@ -25,7 +28,7 @@ const login = async (req, res) => {
     if (!comparePassword) {
       return res
         .status(400)
-        .json("Nom d'utilisateur ou mot de passe incorrect");
+        .json({message :"Nom d'utilisateur ou mot de passe incorrect"});
     }
 
     const token = jwt.sign(

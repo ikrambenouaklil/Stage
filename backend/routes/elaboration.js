@@ -1,54 +1,73 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Elaboration = require('../model/elaboration');
+const Elaboration = require("../model/elaboration");
 
-const verifyJWT = require('../middleware/verifyJWT');
-
-router.use(verifyJWT);
-router.get('/elaborations', async (req, res) => {
+// Créer une nouvelle élaboration
+router.post("/elaborations", async (req, res) => {
   try {
-    // get toutes les elabo
-
-    const elabo = await Elaboration.find().populate('compteComptable');;
-    res.status(200).send(elabo);
-  } catch (err) {
-    res.status(500).send({ error: err.message });
+    const elaboration = new Elaboration(req.body);
+    const savedElaboration = await elaboration.save();
+    res.status(201).send(savedElaboration);
+  } catch (error) {
+    res.status(400).send({ error: error.message });
   }
 });
 
-router.post('/elaborations', async (req, res) => {
+// Obtenir toutes les élaborations
+router.get("/elaborations", async (req, res) => {
   try {
-    const elabo = new Elaboration(req.body);
-    // save in the db
-    await elabo.save();
-    res
-      .status(200)
-      .send({
-        message: `L'elaboration de l'année  a été ajouté avec succès.`,
-        elabo,
-      });
-  } catch (err) {
-    res.status(400).send({ error: err.message });
+    const elaborations = await Elaboration.find().populate(
+      "compteComptable compagne"
+    );
+    res.status(200).send(elaborations);
+  } catch (error) {
+    res.status(500).send({ error: error.message });
   }
 });
 
-router.put('/elaborations/:id', async (req, res) => {
+// Obtenir une élaboration par ID
+router.get("/elaborations/:id", async (req, res) => {
   try {
-    const { id } = req.params;
-    const dataToUpdate = req.body;
-    // new : send the object after the update
-    const besoin = await Elaboration.findByIdAndUpdate(id, dataToUpdate, {
-      new: true,
-    });
-    res.status(204).send({
-      message: "La modification d'elaboration a été réalisée avec succès. ",
-      besoin,
-    });
-  } catch (err) {
-    res.status(400).send({ error: err.message });
+    const elaboration = await Elaboration.findById(req.params.id).populate(
+      "compteComptable compagne"
+    );
+    if (!elaboration) {
+      return res.status(404).send({ error: "Elaboration non trouvée" });
+    }
+    res.status(200).send(elaboration);
+  } catch (error) {
+    res.status(500).send({ error: error.message });
   }
 });
-// je ne peut pas supprimer une elaboration  mais je peut modifier les valeurs des prévisions ect .. 
 
+// Mettre à jour une élaboration par ID
+router.put("/elaborations/:id", async (req, res) => {
+  try {
+    const elaboration = await Elaboration.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+    if (!elaboration) {
+      return res.status(404).send({ error: "Elaboration non trouvée" });
+    }
+    res.status(200).send(elaboration);
+  } catch (error) {
+    res.status(400).send({ error: error.message });
+  }
+});
+
+// Supprimer une élaboration par ID
+router.delete("/elaborations/:id", async (req, res) => {
+  try {
+    const elaboration = await Elaboration.findByIdAndDelete(req.params.id);
+    if (!elaboration) {
+      return res.status(404).send({ error: "Elaboration non trouvée" });
+    }
+    res.status(200).send({ message: "Elaboration supprimée avec succès" });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
 
 module.exports = router;

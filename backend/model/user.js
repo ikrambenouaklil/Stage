@@ -10,21 +10,21 @@ const userSchema = new mongoose.Schema({
   },
   MotDePasse: {
     type: String,
-    required: [true, 'Mot de passe  obligatoire'],
+    required: [true, "Mot de passe  obligatoire"],
   },
-  Nom: { type: String, required: [true, 'Nom obligatoire'] },
-  Prénom: { type: String, required: [true, 'Prénom obligatoire'] },
+  Nom: { type: String, required: [true, "Nom obligatoire"] },
+  Prénom: { type: String, required: [true, "Prénom obligatoire"] },
   Email: {
     type: String,
     unique: [true, "l'adrese email doit etre unique"],
-    required: [true, 'Email obligatoire'],
+    required: [true, "Email obligatoire"],
   },
-  Departement: { type: String, required: [true, 'Departement obligatoire'] },
+  Departement: { type: String, required: [true, "Departement obligatoire"] },
 
   Accès: {
     type: String,
-    enum: ['consulter', 'editer', 'administrer'],
-    default: 'consulter',
+    enum: ["Utilisateur", "Manager", "Admin"],
+    default: "Utilisateur",
     required: [true, "l'acces est  obligatoire"],
   },
 });

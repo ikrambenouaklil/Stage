@@ -1,57 +1,79 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const compagneBudg = require('../model/compagneBudg');
-const verifyJWT = require('../middleware/verifyJWT');
+const compagneBudg = require("../model/compagneBudg");
+const verifyJWT = require("../middleware/verifyJWT");
+
 // router.use(verifyJWT);
-router.get('/compagnes',  async (req, res) => {
+
+router.get("/compagnes", async (req, res) => {
   try {
-    // get toutes les besoins
-    const besoins = await compagneBudg
+    // Get all compagnes
+    const compagnes = await compagneBudg
       .find()
-      .populate('besoins', 'elaboration');
-    res.status(200).send(besoins);
+    res.status(200).send(compagnes);
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
 });
 
-router.post('/compagnes',  async (req, res) => {
+router.post("/compagnes", async (req, res) => {
   try {
-    const besoin = new compagneBudg(req.body);
-    // save in the db
-    await besoin.save();
-    res
-      .status(200)
-      .send({ message: 'Le besoin a été ajouté avec succès.', besoin });
+    // Create a new compagne
+    const { Année } = req.body;
+    const newCompagne = new compagneBudg({ Année });
+    await newCompagne.save();
+    res.status(200).send(newCompagne);
   } catch (err) {
     res.status(400).send({ error: err.message });
   }
 });
 
-router.put('/compagnes/:id',  async (req, res) => {
+router.get("/compagnes/:id", async (req, res) => {
   try {
+    // Get a specific compagne
+    const { id } = req.params;
+    const compagne = await compagneBudg
+      .findById(id)
+     
+    if (!compagne) {
+      return res.status(404).send({ error: "Compagne not found" });
+    }
+    res.status(200).send(compagne);
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+});
+
+router.put("/compagnes/:id", async (req, res) => {
+  try {
+    // Update a compagne
     const { id } = req.params;
     const dataToUpdate = req.body;
-    // new : send the object after the update
-    const besoin = await Besoin.findByIdAndUpdate(id, dataToUpdate, {
-      new: true,
-    });
-    res.status(204).send({
-      message: 'La modification du besoin a été réalisée avec succès. ',
-      besoin,
-    });
+    const updatedCompagne = await compagneBudg.findByIdAndUpdate(
+      id,
+      dataToUpdate,
+      {
+        new: true,
+      }
+    );
+    if (!updatedCompagne) {
+      return res.status(404).send({ error: "Compagne not found" });
+    }
+    res.status(200).send(updatedCompagne);
   } catch (err) {
     res.status(400).send({ error: err.message });
   }
 });
 
-router.delete('/compagnes/:id',  async (req, res) => {
+router.delete("/compagnes/:id", async (req, res) => {
   try {
+    // Delete a compagne
     const { id } = req.params;
-    await Besoin.findByIdAndDelete(id);
-    res.status(204).send({
-      message: 'La suppression du besoin a été effectuée avec succès ',
-    });
+    const deletedCompagne = await compagneBudg.findByIdAndDelete(id);
+    if (!deletedCompagne) {
+      return res.status(404).send({ error: "Compagne not found" });
+    }
+    res.status(204).send();
   } catch (err) {
     res.status(400).send({ error: err.message });
   }

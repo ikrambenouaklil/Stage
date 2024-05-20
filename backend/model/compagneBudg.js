@@ -10,23 +10,9 @@ const compagneBudgSchema = new mongoose.Schema({
     max: 9999,
     unique: true,
   },
-  NoteOrientation: {
-    type: String, // to be edit it after
-  },
-  besoins: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'lesbesoins',
-    required: true,
-  },
-  elaboration: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'elaborations',
-    required: true,
-  },
   cloturer: {
     type: Boolean,
     default: false,
-    required: true,
   },
 });
 

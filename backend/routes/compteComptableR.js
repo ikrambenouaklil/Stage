@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const CompteComptable = require('../model/compteComtable');
-const verifyJWT = require('../middleware/verifyJWT');
+// const verifyJWT = require('../middleware/verifyJWT');
 
 const comptesDefaults = [
   { numeroCompte: 61, designation: 'Achats consommés' },
@@ -28,7 +28,7 @@ router.post('/compteCmpt', async (req, res) => {
     );
   }
 });
-router.use(verifyJWT);
+
 router.get('/compteCmpt', async (req, res) => {
   try {
     const compte_comptable = await CompteComptable.find();

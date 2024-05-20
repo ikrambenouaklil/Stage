@@ -1,0 +1,406 @@
+
+import React, { useState, useEffect } from "react";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import EditIcon from "@mui/icons-material/Edit";
+import {
+  Box,
+  CircularProgress,
+  Alert,
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+} from "@mui/material";
+import { exportToExcel } from "./utils";
+
+const Elaboration = () => {
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+const [rows, setRows] = useState([
+  {
+    id: 1,
+    compteComptable: "61",
+    designation: "Achats consommés",
+    realisationAnnéePre: 800000,
+    prévisionAnnéeActuel: 800000,
+    RealisationS1: 800000,
+    PrévisionS2: 800000,
+    PrévisionAnnéeSuivante: 788888,
+  },
+  {
+    id: 2,
+    compteComptable: "62",
+    designation: "Autres services extérieurs",
+    realisationAnnéePre: 700000,
+    prévisionAnnéeActuel: 800000,
+    RealisationS1: 600000,
+    PrévisionS2: 500000,
+    PrévisionAnnéeSuivante: 600000,
+  },
+  {
+    id: 3,
+    compteComptable: "63",
+    designation: "Charges de personnel",
+    realisationAnnéePre: 400000,
+    prévisionAnnéeActuel: 10000,
+    RealisationS1: 10000,
+    PrévisionS2: 30000,
+    PrévisionAnnéeSuivante: 600000,
+  },
+  {
+    id: 4,
+    compteComptable: "64",
+    designation: "Impôts, taxes et versements assimilés",
+    realisationAnnéePre: 600000,
+    prévisionAnnéeActuel: 600000,
+    RealisationS1: 600000,
+    PrévisionS2: 600000,
+    PrévisionAnnéeSuivante: 60000,
+  },
+  {
+    id: 5,
+    compteComptable: "65",
+    designation: "Autres charges opérationnelles",
+    realisationAnnéePre: 0.0,
+    prévisionAnnéeActuel: 0.0,
+    RealisationS1: 0.0,
+    PrévisionS2: 0.0,
+    PrévisionAnnéeSuivante: 0.0,
+    tauxRealisation: 0,
+  },
+  {
+    id: 6,
+    compteComptable: "66",
+    designation: "Charges financières",
+    realisationAnnéePre: 0.0,
+    prévisionAnnéeActuel: 0.0,
+    RealisationS1: 0.0,
+    PrévisionS2: 0.0,
+    PrévisionAnnéeSuivante: 0.0,
+    tauxRealisation: 0,
+  },
+  {
+    id: 7,
+    compteComptable: "67",
+    designation: "Éléments extraordinaires",
+    realisationAnnéePre: 0.0,
+    prévisionAnnéeActuel: 0.0,
+    RealisationS1: 0.0,
+    PrévisionS2: 0.0,
+    PrévisionAnnéeSuivante: 0.0,
+    tauxRealisation: 0,
+  },
+  {
+    id: 8,
+    compteComptable: "68",
+    designation: "Dotations aux amortissements et provisions",
+    realisationAnnéePre: 0.0,
+    prévisionAnnéeActuel: 0.0,
+    RealisationS1: 0.0,
+    PrévisionS2: 0.0,
+    PrévisionAnnéeSuivante: 0.0,
+    tauxRealisation: 0,
+  },
+]);
+
+  const handleEditDialog = (row) => {
+    setSelectedRow({ ...row });
+    setEditDialogOpen(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setEditDialogOpen(false);
+  };
+
+  const handleSaveEdit = () => {
+    const updatedRow = { ...selectedRow };
+    if (
+      updatedRow.realisationAnnéePre === "" ||
+      updatedRow.prévisionAnnéeActuel === "" ||
+      updatedRow.RealisationS1 === "" ||
+      updatedRow.PrévisionS2 === "" ||
+      updatedRow.PrévisionAnnéeSuivante === ""
+    ) {
+      alert("Veuillez remplir tous les champs obligatoires.");
+      return;
+    }
+
+    setRows((prevRows) =>
+      prevRows.map((row) =>
+        row.id === updatedRow.id
+          ? {
+              ...updatedRow,
+              realisationAnnéePre: parseFloat(updatedRow.realisationAnnéePre),
+              prévisionAnnéeActuel: parseFloat(updatedRow.prévisionAnnéeActuel),
+              RealisationS1: parseFloat(updatedRow.RealisationS1),
+              PrévisionS2: parseFloat(updatedRow.PrévisionS2),
+              PrévisionAnnéeSuivante: parseFloat(
+                updatedRow.PrévisionAnnéeSuivante
+              ),
+            }
+          : row
+      )
+    );
+    setEditDialogOpen(false);
+  };
+
+  const handleInputChange = (field, value) => {
+    setSelectedRow((prevRow) => ({
+      ...prevRow,
+      [field]: value,
+    }));
+  };
+
+  const columns = [
+    {
+      field: "compteComptable",
+      headerName: "Compte Comptable",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
+    {
+      field: "designation",
+      headerName: " Designiation",
+      align: "center",
+      headerAlign: "center",
+      width: 500,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: "wrap" }}>{params.value}</div>
+      ),
+    },
+    {
+      field: "realisationAnnéePre",
+      headerName: "Realisation N-1",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
+    {
+      field: "prévisionAnnéeActuel",
+      headerName: "Prévision N",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
+    {
+      field: "RealisationS1",
+      headerName: "Realisation du S1",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
+    {
+      field: "PrévisionS2",
+      headerName: "Prévision du S2",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
+    {
+      field: "PrévisionAnnéeSuivante",
+      headerName: "Prévision du N+1",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+      renderCell: (params) => (
+        <IconButton
+          color="primary"
+          onClick={() => handleEditDialog(params.row)}
+        >
+          <EditIcon />
+        </IconButton>
+      ),
+    },
+    {
+      field: "tauxRealisation",
+      headerName: "Taux de réalisation %",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+      renderCell: (params) => {
+        const realisationAnnéePre = parseFloat(params.row.realisationAnnéePre);
+        const prévisionAnnéeSuivante = parseFloat(
+          params.row.PrévisionAnnéeSuivante
+        );
+
+        let tauxRealisation = 0;
+        let backgroundColor = "#FF5C00";
+
+        if (realisationAnnéePre > 0 ) {
+          tauxRealisation = (
+            (prévisionAnnéeSuivante / realisationAnnéePre) *
+            100
+          ).toFixed(2);
+
+           if (tauxRealisation >= 110) {
+             backgroundColor = "#FF5C00";
+           }else if (tauxRealisation >= 90) {
+            backgroundColor = "#1141EC";
+          } else if (tauxRealisation >= 50) {
+            backgroundColor = "#7000FF";
+        
+          }
+        }
+
+        return (
+          <div style={{ backgroundColor, color:"white", padding: "5px", borderRadius: "5px" }}>
+            {tauxRealisation}%
+          </div>
+        );
+      },
+    },
+  ];
+
+  const calculateTauxRealisation = (rows) => {
+    return rows.map((row) => {
+      const realisationAnnéePre = parseFloat(row.realisationAnnéePre);
+      const prévisionAnnéeSuivante = parseFloat(row.PrévisionAnnéeSuivante);
+
+      let tauxRealisation = 0;
+
+      if (realisationAnnéePre > 0) {
+        tauxRealisation = (
+          (prévisionAnnéeSuivante / realisationAnnéePre) *
+          100
+        ).toFixed(2);
+      }
+
+      return {
+        ...row,
+        tauxRealisation: `${tauxRealisation}%`,
+      };
+    });
+  };
+
+  const handleExportToExcel = () => {
+    const rowsWithTauxRealisation = calculateTauxRealisation(rows);
+    exportToExcel(rowsWithTauxRealisation, "Elaboration");
+  };
+
+  return (
+    <section
+      style={{
+        backgroundColor: "white",
+        width: "100%",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
+        padding: "30px 20px 0px 20px",
+        fontSize: 10,
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <p style={{ color: "orange", fontWeight: "500", fontSize: 20 }}>
+          Elaboration
+        </p>
+        <div></div>
+      </div>
+      <Box
+        sx={{
+          height: 500,
+          width: "100%",
+          fontSize: 10,
+          whiteSpace: "pre-wrap",
+        }}
+      >
+        <DataGrid
+          slots={{ toolbar: GridToolbar }}
+          rows={rows}
+          getRowId={(row) => row.id}
+          columns={columns}
+          rowHeight={40}
+        />
+
+        <Button
+          sx={{ width: "100%", marginTop: "10px" }}
+          variant="contained"
+          color="primary"
+          onClick={handleExportToExcel}
+        >
+          Exporter Format Excel
+        </Button>
+      </Box>
+      <Dialog open={editDialogOpen} onClose={handleCloseEditDialog}>
+        <DialogTitle>Modifier l'élaboration</DialogTitle>
+        <DialogContent
+          sx={{
+            paddingTop: 10,
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          <TextField
+            sx={{ marginTop: 1 }}
+            label="Compte Comptable"
+            value={selectedRow?.compteComptable || ""}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+
+          <TextField
+            label="Realisation N-1"
+            type="number"
+            value={selectedRow?.realisationAnnéePre || ""}
+            onChange={(e) =>
+              handleInputChange("realisationAnnéePre", e.target.value)
+            }
+            required
+          />
+
+          <TextField
+            label="Prévision N"
+            type="number"
+            value={selectedRow?.prévisionAnnéeActuel || ""}
+            onChange={(e) =>
+              handleInputChange("prévisionAnnéeActuel", e.target.value)
+            }
+            required
+          />
+          <TextField
+            label="Realisation du S1"
+            type="number"
+            value={selectedRow?.RealisationS1 || ""}
+            onChange={(e) => handleInputChange("RealisationS1", e.target.value)}
+            required
+          />
+          <TextField
+            label="Prévision du S2"
+            type="number"
+            value={selectedRow?.PrévisionS2 || ""}
+            onChange={(e) => handleInputChange("PrévisionS2", e.target.value)}
+            required
+          />
+          <TextField
+            label="Prévision N+1"
+            type="number"
+            value={selectedRow?.PrévisionAnnéeSuivante || ""}
+            onChange={(e) =>
+              handleInputChange("PrévisionAnnéeSuivante", e.target.value)
+            }
+            required
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEditDialog}>Annuler</Button>
+          <Button onClick={handleSaveEdit}>Enregistrer</Button>
+        </DialogActions>
+      </Dialog>
+    </section>
+  );
+};
+
+export default Elaboration;

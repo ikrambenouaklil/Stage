@@ -1,0 +1,349 @@
+import React, { useState, useEffect } from "react";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import EditIcon from "@mui/icons-material/Edit";
+import { exportToExcel } from "./utils";
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import {
+  Box,
+  CircularProgress,
+  Alert,
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+} from "@mui/material";
+import { useParams } from "react-router-dom";
+
+const Besoins = ({role}) => {
+  const { compagneId } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [besoins, setBesoins] = useState([]);
+  const [newBesoin, setNewBesoin] = useState({
+  
+    item: "",
+    valorisation: "",
+    quantité: "",
+    duréeContrat: "",
+    compagne: compagneId,
+  });
+
+  useEffect(() => {
+    const fetchBesoins = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(
+          `http://localhost:3010/besoin/${compagneId}`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error ${response.status}`);
+        }
+        const data = await response.json();
+        setBesoins(
+          data.map((besoin) => ({ ...besoin}))
+        );
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchBesoins();
+  }, [compagneId]);
+
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const columns = [
+    {
+      field: "item",
+      headerName: "Item",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
+    {
+      field: "valorisation",
+      headerName: "Valorisation",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
+    {
+      field: "quantité",
+      headerName: "Quantité",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
+    {
+      field: "duréeContrat",
+      headerName: "Durée de contrat",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+      renderCell: (params) => (
+        
+        <div>
+          <IconButton
+            color="primary"
+            onClick={() => handleEditDialog(params.row)}
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            color="secondary"
+            onClick={() => handleDelete(params.row._id)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </div>
+      ),
+    },
+  ];
+   const handleExportToExcel = () => {
+     exportToExcel(besoins, "besoins_data");
+   };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await fetch(
+        `http://localhost:3010/besoin/${compagneId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newBesoin),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
+
+      const newBesoinData = await response.json();
+      setBesoins((prevBesoins) => [
+        ...prevBesoins, newBesoinData   ]);
+       console.log(newBesoinData);
+      setNewBesoin({
+        item: "",
+        valorisation: "",
+        quantité: "",
+        duréeContrat: "",
+        compagne: compagneId,
+      });
+
+      setOpen(false);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleUpdate = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3010/besoin/${newBesoin._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newBesoin),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
+
+      const updatedBesoinData = await response.json();
+      setBesoins((prevBesoins) =>
+        prevBesoins.map((besoin) =>
+          besoin._id === updatedBesoinData._id
+            ? { ...updatedBesoinData, id: besoin._id }
+            : besoin
+        )
+      );
+
+      setNewBesoin({
+        item: "",
+        valorisation: "",
+        quantité: "",
+        duréeContrat: "",
+        compagne: compagneId,
+      });
+
+      setOpen(false);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3010/besoin/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
+
+      setBesoins((prevBesoins) =>
+        prevBesoins.filter((besoin) => besoin._id !== id)
+      );
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleEditDialog = (besoin) => {
+    setNewBesoin(besoin);
+    setOpen(true);
+  };
+
+  return (
+    <section
+      style={{
+        backgroundColor: "white",
+        width: "100%",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
+        padding: "50px 20px 0px 20px",
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <p style={{ color: "orange", fontWeight: "500", fontSize: 20 }}>
+          Les Besoins
+        </p>
+        <div></div>
+      </div>
+      <Box sx={{ height: 400, width: "100%" }}>
+        {isLoading ? (
+          <CircularProgress />
+        ) : error ? (
+          <Alert severity="error">Error: {error}</Alert>
+        ) : (
+          <DataGrid
+            slots={{ toolbar: GridToolbar }}
+            // rows={besoins}
+            rows={besoins.map((besoin) => ({
+              ...besoin,
+              id: besoin._id,
+            }))}
+            columns={columns}
+          />
+        )}
+      </Box>
+      <React.Fragment>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleExportToExcel}
+        >
+          Export as Excel
+        </Button>
+
+        <Button variant="outlined" onClick={handleClickOpen} color="primary">
+          Ajouter
+        </Button>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>
+            {newBesoin._id ? "Modifier Un besoin" : "Ajouter Un besoin"}
+          </DialogTitle>
+          <DialogContent>
+            <form
+              onSubmit={newBesoin._id ? handleUpdate : handleSubmit}
+              style={{ display: "flex", flexDirection: "column", gap: 10 }}
+            >
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                name="item"
+                label="Item"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={newBesoin.item}
+                onChange={(e) =>
+                  setNewBesoin({ ...newBesoin, item: e.target.value })
+                }
+              />
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                name="valorisation"
+                label="Valorisation"
+                type="number"
+                fullWidth
+                variant="standard"
+                value={newBesoin.valorisation}
+                onChange={(e) =>
+                  setNewBesoin({ ...newBesoin, valorisation: e.target.value })
+                }
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                name="quantité"
+                label="Quantité"
+                type="number"
+                fullWidth
+                variant="standard"
+                value={newBesoin.quantité}
+                onChange={(e) =>
+                  setNewBesoin({ ...newBesoin, quantité: e.target.value })
+                }
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                name="duréeContrat"
+                label="Durée de contrat"
+                type="number"
+                fullWidth
+                variant="standard"
+                value={newBesoin.duréeContrat}
+                onChange={(e) =>
+                  setNewBesoin({ ...newBesoin, duréeContrat: e.target.value })
+                }
+              />
+              <DialogActions>
+                <Button onClick={handleClose}>Annuler</Button>
+                <Button type="submit">
+                  {newBesoin.id ? "Mettre à jour" : "Enregistrer"}
+                </Button>
+              </DialogActions>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </React.Fragment>
+    </section>
+  );
+};
+
+export default Besoins;

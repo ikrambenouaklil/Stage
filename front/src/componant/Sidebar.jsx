@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { List, ListItem, ListItemText } from "@mui/material";
 
 const array = [
-  {
-    text: "Admin",
-    link: "admin",
-  },
+  // {
+  //   text: "Admin",
+  //   link: "admin",
+  // },
   {
     text: "Les compagnes",
     link: "compagnes",
